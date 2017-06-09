@@ -40,11 +40,25 @@ class CollectionAdapter(
         holder.tvNumber.text = number
         holder.ivCard.setImageResource(bean.resId)
         holder.tvCount.text = bean.count.toString()
+
+        holder.ivCard.setOnClickListener {
+            onItemClickListener?.onItemClick(position)
+        }
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvNumber: TextView = view.tv_number
         val ivCard: ImageView = view.iv_card
         val tvCount: TextView = view.tv_count
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    private var onItemClickListener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.onItemClickListener = onItemClickListener
     }
 }

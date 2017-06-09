@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL
+import android.view.View
 import com.simoncherry.shuihuccg2.R
 import com.simoncherry.shuihuccg2.model.CollectionBean
 import com.simoncherry.shuihuccg2.ui.adapter.CollectionAdapter
+import com.simoncherry.shuihuccg2.util.setSampledBitmap
 import kotlinx.android.synthetic.main.fragment_collection.*
 import java.util.ArrayList
 
@@ -70,12 +72,28 @@ class CollectionFragment : BaseFragment() {
             setPagePointer(mCurrentPage)
             showCardByPage(mCurrentPage)
         }
+
+        ivMask.setOnClickListener {
+            ivDetail.setImageResource(0)
+            ivMask.visibility = View.GONE
+            ivMask.setClickable(false)
+            layoutDetail.visibility = View.GONE
+        }
     }
 
     private fun initRecyclerView() {
         mData = ArrayList<CollectionBean>()
         mAdapter = CollectionAdapter(mContext, mData)
-        //rvCollection.layoutManager = GridLayoutManager(mContext, 2)
+        mAdapter.setOnItemClickListener(object : CollectionAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                if (mData.size > position) {
+                    ivDetail.setSampledBitmap(mData[position].resId, 200, 300)
+                    ivMask.visibility = View.VISIBLE
+                    ivMask.setClickable(true)
+                    layoutDetail.visibility = View.VISIBLE
+                }
+            }
+        })
         rvCollection.layoutManager = StaggeredGridLayoutManager(2, VERTICAL)
         rvCollection.adapter = mAdapter
 
