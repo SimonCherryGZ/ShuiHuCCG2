@@ -1,16 +1,20 @@
 package com.simoncherry.shuihuccg2.ui.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
 import com.simoncherry.shuihuccg2.R
 import com.simoncherry.shuihuccg2.model.CollectionBean
 import com.simoncherry.shuihuccg2.ui.adapter.CollectionAdapter
+import com.simoncherry.shuihuccg2.util.Rotate3d
+import com.simoncherry.shuihuccg2.util.getDrawableResId
 import com.simoncherry.shuihuccg2.util.setSampledBitmap
 import kotlinx.android.synthetic.main.fragment_collection.*
-import java.util.ArrayList
+import java.util.*
+
 
 /**
  * <pre>
@@ -26,6 +30,8 @@ class CollectionFragment : BaseFragment() {
     private lateinit var mAdapter: CollectionAdapter
     private lateinit var mData: MutableList<CollectionBean>
     private var mCurrentPage = 1
+    private var mCurrentIndex = 0
+    private var mIsFrontFace = true
 
     companion object {
         fun newInstance(): CollectionFragment {
@@ -75,9 +81,21 @@ class CollectionFragment : BaseFragment() {
 
         ivMask.setOnClickListener {
             ivDetail.setImageResource(0)
+            ivDetail.visibility = View.GONE
             ivMask.visibility = View.GONE
-            ivMask.setClickable(false)
+            ivMask.isClickable = false
             layoutDetail.visibility = View.GONE
+            mIsFrontFace = true
+        }
+
+        ivDetail.setOnClickListener {
+            if(mIsFrontFace){
+                mIsFrontFace = false
+                applyRotateToBack(300, mCurrentIndex)
+            }else{
+                mIsFrontFace = true
+                applyRotateToFront(300, mCurrentIndex)
+            }
         }
     }
 
@@ -87,9 +105,11 @@ class CollectionFragment : BaseFragment() {
         mAdapter.setOnItemClickListener(object : CollectionAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 if (mData.size > position) {
+                    mCurrentIndex = (mCurrentPage - 1) * 6 + position + 1
                     ivDetail.setSampledBitmap(mData[position].resId, 200, 300)
+                    ivDetail.visibility = View.VISIBLE
                     ivMask.visibility = View.VISIBLE
-                    ivMask.setClickable(true)
+                    ivMask.isClickable = true
                     layoutDetail.visibility = View.VISIBLE
                 }
             }
@@ -123,5 +143,49 @@ class CollectionFragment : BaseFragment() {
             mData.add(bean)
         }
         mAdapter.notifyDataSetChanged()
+    }
+
+    private fun applyRotateToBack(duration: Int, index: Int) {
+        val centerX = ivDetail.width / 2.0f
+        val centerY = ivDetail.height / 2.0f
+
+        val rotateTo180 = Rotate3d(270f, 360f, centerX, centerY, 0f, true)
+        rotateTo180.duration = duration.toLong()
+        rotateTo180.fillAfter = true
+
+        val rotateTo90 = Rotate3d(0f, 90f, centerX, centerY, 0f, true)
+        rotateTo90.duration = duration.toLong()
+        rotateTo90.setAnimationListener(object : AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                ivDetail.setSampledBitmap(getDrawableResId(mContext, "back", index), 200 ,300)
+                layoutDetail.startAnimation(rotateTo180)
+            }
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+
+        layoutDetail.startAnimation(rotateTo90)
+    }
+
+    private fun applyRotateToFront(duration: Int, index: Int) {
+        val centerX = ivDetail.width / 2.0f
+        val centerY = ivDetail.height / 2.0f
+
+        val rotateTo180 = Rotate3d(-270f, -360f, centerX, centerY, 0f, true)
+        rotateTo180.duration = duration.toLong()
+        rotateTo180.fillAfter = true
+
+        val rotateTo90 = Rotate3d(0f, -90f, centerX, centerY, 0f, true)
+        rotateTo90.duration = duration.toLong()
+        rotateTo90.setAnimationListener(object : AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                ivDetail.setSampledBitmap(getDrawableResId(mContext, "front", index), 200 ,300)
+                layoutDetail.startAnimation(rotateTo180)
+            }
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+
+        layoutDetail.startAnimation(rotateTo90)
     }
 }
