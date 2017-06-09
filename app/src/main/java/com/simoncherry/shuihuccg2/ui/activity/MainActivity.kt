@@ -5,10 +5,7 @@ import android.util.Log
 import com.simoncherry.shuihuccg2.R
 import com.simoncherry.shuihuccg2.ui.custom.BottomBar
 import com.simoncherry.shuihuccg2.ui.custom.BottomBarTab
-import com.simoncherry.shuihuccg2.ui.fragment.CollectionFragment
-import com.simoncherry.shuihuccg2.ui.fragment.MapFragment
-import com.simoncherry.shuihuccg2.ui.fragment.NoteFragment
-import com.simoncherry.shuihuccg2.ui.fragment.StatusFragment
+import com.simoncherry.shuihuccg2.ui.fragment.*
 import me.yokeyword.fragmentation.SupportFragment
 import me.yokeyword.fragmentation.anim.FragmentAnimator
 
@@ -47,7 +44,8 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState == null) {
             mFragments[FIRST] = MapFragment.newInstance()
             mFragments[SECOND] = StatusFragment.newInstance()
-            mFragments[THIRD] = NoteFragment.newInstance()
+            //mFragments[THIRD] = NoteFragment.newInstance()
+            mFragments[THIRD] = LuckyDrawFragment.newInstance()
             mFragments[FOURTH] = CollectionFragment.newInstance()
 
             loadMultipleRootFragment(R.id.fl_container, FIRST,
@@ -61,7 +59,8 @@ class MainActivity : BaseActivity() {
             // 这里我们需要拿到mFragments的引用,也可以通过getSupportFragmentManager.getFragments()自行进行判断查找(效率更高些),用下面的方法查找更方便些
             mFragments[FIRST] = findFragment(MapFragment::class.java)
             mFragments[SECOND] = findFragment(StatusFragment::class.java)
-            mFragments[THIRD] = findFragment(NoteFragment::class.java)
+            //mFragments[THIRD] = findFragment(NoteFragment::class.java)
+            mFragments[THIRD] = findFragment(LuckyDrawFragment::class.java)
             mFragments[FOURTH] = findFragment(CollectionFragment::class.java)
         }
     }

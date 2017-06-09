@@ -17,3 +17,10 @@ fun getDrawableResId(context: Context, prefix: String, index: Int): Int {
     val resId = context.resources.getIdentifier(resName, "drawable", context.packageName)
     return resId
 }
+
+fun getStringRes(context: Context, prefix: String, index: Int): String {
+    var resName = prefix + index.toString()
+    val resId = context.resources.getIdentifier(resName, "string", context.packageName)
+    resName = context.getString(resId)
+    return resName
+}
