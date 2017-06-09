@@ -7,4 +7,13 @@
     <color name="bg_app">#F1F1F1</color>
     <color name="tab_unselect">#c9c9c9</color>
     <color name="bg_btn">#dadada</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="gold">#CFB53B</color>
+    <color name="text_normal_color">#333333</color>
+    <color name="bg_normal_color">#ffe0e0e0</color>
+    <color name="yellow_bg_color">#f3e0b5</color>
+    <color name="item_hint_color">#8056c5ff</color>
 </resources>

@@ -9,7 +9,6 @@
     <FrameLayout
         android:id="@+id/fl_container"
         android:layout_width="match_parent"
-        android:layout_marginBottom="48dp"
         android:layout_height="match_parent"/>
 
     <com.simoncherry.shuihuccg2.ui.custom.BottomBar

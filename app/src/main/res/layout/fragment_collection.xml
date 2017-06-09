@@ -1,13 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/ivBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/collectionbook_inside" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvCollection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:layout_toRightOf="@+id/arrowLeft"
+        android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@+id/arrowRight"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/tvPagePointer"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        android:cacheColorHint="#00000000" >
+    </android.support.v7.widget.RecyclerView>
+
+    <ImageButton
+        android:id="@+id/arrowLeft"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/page_pointer_left"
+        android:scaleType="fitXY" />
+
+    <ImageButton
+        android:id="@+id/arrowRight"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/page_pointer_right"
+        android:scaleType="fitXY" />
 
     <TextView
+        android:id="@+id/tvPagePointer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="24sp"
-        android:text="Collection Fragment"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="75dp"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_normal_color"
+        android:text="1 / 18" />
 
 </RelativeLayout>
