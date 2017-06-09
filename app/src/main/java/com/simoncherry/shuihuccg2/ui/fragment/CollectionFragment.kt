@@ -91,10 +91,10 @@ class CollectionFragment : BaseFragment() {
         ivDetail.setOnClickListener {
             if(mIsFrontFace){
                 mIsFrontFace = false
-                applyRotateToBack(300, mCurrentIndex)
+                applyRotateToBack(250, mCurrentIndex)
             }else{
                 mIsFrontFace = true
-                applyRotateToFront(300, mCurrentIndex)
+                applyRotateToFront(250, mCurrentIndex)
             }
         }
     }
