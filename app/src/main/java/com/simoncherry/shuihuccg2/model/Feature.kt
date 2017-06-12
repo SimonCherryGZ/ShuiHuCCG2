@@ -13,5 +13,5 @@ import io.realm.annotations.PrimaryKey
  * </pre>
  */
 @PoKo open class Feature(
-        @PrimaryKey var id: Long
+        @PrimaryKey var id: Int
 ) : RealmObject()

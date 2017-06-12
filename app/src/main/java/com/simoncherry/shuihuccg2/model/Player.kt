@@ -14,7 +14,7 @@ import io.realm.annotations.PrimaryKey
  * </pre>
  */
 @PoKo open class Player(
-        @PrimaryKey var id: Long,
+        @PrimaryKey var id: Int,
         var name: String,
         var income: Int,
         var money: Int,
@@ -23,4 +23,9 @@ import io.realm.annotations.PrimaryKey
         var cardList: RealmList<Card>,
         var itemList: RealmList<Item>,
         var featureList: RealmList<Feature>
-) : RealmObject()
+) : RealmObject() {
+
+    fun getStatus(): String {
+        return "Player_Status(income=$income, money=$money, study=$study, mood=$mood)"
+    }
+}

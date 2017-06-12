@@ -13,7 +13,7 @@ import io.realm.annotations.PrimaryKey
  * </pre>
  */
 @PoKo open class Item(
-        @PrimaryKey var id: Long,
+        @PrimaryKey var id: Int,
         var type: Int,
         var value: Int,
         var count: Int

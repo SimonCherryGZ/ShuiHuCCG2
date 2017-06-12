@@ -12,8 +12,9 @@ import io.realm.annotations.PrimaryKey
  *     version: 1.0
  * </pre>
  */
-@PoKo open class Card(
-        @PrimaryKey var id: Int,
-        var index: Int,
-        var count: Int
+@PoKo open class Global(
+        @PrimaryKey var id: Int = 0,
+        var isInit: Boolean = false,
+        var day: Int = 0,
+        var scence: Int = 0
 ) : RealmObject()

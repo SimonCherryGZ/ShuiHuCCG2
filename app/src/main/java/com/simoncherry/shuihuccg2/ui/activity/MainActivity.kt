@@ -42,7 +42,8 @@ class MainActivity : BaseActivity() {
 
     private fun initFragment(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            mFragments[FIRST] = MapFragment.newInstance()
+            //mFragments[FIRST] = MapFragment.newInstance()
+            mFragments[FIRST] = TestFragment.newInstance()
             mFragments[SECOND] = StatusFragment.newInstance()
             //mFragments[THIRD] = NoteFragment.newInstance()
             mFragments[THIRD] = LuckyDrawFragment.newInstance()
@@ -57,7 +58,8 @@ class MainActivity : BaseActivity() {
             // 这里库已经做了Fragment恢复,所有不需要额外的处理了, 不会出现重叠问题
 
             // 这里我们需要拿到mFragments的引用,也可以通过getSupportFragmentManager.getFragments()自行进行判断查找(效率更高些),用下面的方法查找更方便些
-            mFragments[FIRST] = findFragment(MapFragment::class.java)
+            //mFragments[FIRST] = findFragment(MapFragment::class.java)
+            mFragments[FIRST] = findFragment(TestFragment::class.java)
             mFragments[SECOND] = findFragment(StatusFragment::class.java)
             //mFragments[THIRD] = findFragment(NoteFragment::class.java)
             mFragments[THIRD] = findFragment(LuckyDrawFragment::class.java)
