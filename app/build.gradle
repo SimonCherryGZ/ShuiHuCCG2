@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "kotlin-noarg"
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 25
@@ -19,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+noArg {
+    annotation("com.simoncherry.shuihuccg2.model.PoKo")
 }
 
 dependencies {

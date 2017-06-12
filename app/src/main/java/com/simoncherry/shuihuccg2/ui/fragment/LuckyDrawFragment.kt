@@ -124,10 +124,7 @@ class LuckyDrawFragment : BaseFragment() {
         val cardName = getString(R.string.hero_name) + getStringRes(mContext, "name", index)
         tvCardName.text = cardName
 
-        //val cardName = "front" + index.toString()
-        //val imgResId = resources.getIdentifier(cardName, "drawable", this.activity.packageName)
         val imgResId = getDrawableResId(mContext, "front", index)
-
         ivCard.visibility = View.VISIBLE
         ivCard.setSampledBitmap(imgResId, 70, 105)
         ivCard.startAnimation(mDrawCardAnim)
