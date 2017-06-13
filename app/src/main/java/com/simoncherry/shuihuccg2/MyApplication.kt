@@ -1,6 +1,7 @@
 package com.simoncherry.shuihuccg2
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import com.simoncherry.shuihuccg2.model.*
 import com.simoncherry.shuihuccg2.util.getStringRes
@@ -8,6 +9,7 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import io.realm.RealmList
+import java.util.*
 
 
 
@@ -22,6 +24,7 @@ import io.realm.RealmList
  */
 class MyApplication : Application() {
 
+    private val TAG = MyApplication::class.java.simpleName
     private val DB_NAME = "shuihuccg"
 
     override fun onCreate() {
@@ -51,19 +54,37 @@ class MyApplication : Application() {
         val global = results.first()
         val isInit = global.isInit
         if (!isInit) {
+            realm.executeTransaction {
+                global.isInit = true
+                realm.copyToRealmOrUpdate(global)
+            }
             initData(realm)
         }
         realm.close()
     }
 
     private fun initData(realm: Realm) {
+        val random = Random(System.nanoTime())
         for (i in 0..11) {
             val cardList: RealmList<Card> = RealmList()
+            for (j in 1..108) {
+                val currentIdNum = realm.where(Card::class.java).max("id")
+                var nextId: Int
+                if (currentIdNum == null) {
+                    nextId = j
+                } else {
+                    nextId = currentIdNum.toInt() + j
+                }
+                val card = Card(nextId, i, j, random.nextInt(10))
+                Log.e(TAG, card.toString())
+                cardList.add(card)
+            }
+
             val itemList: RealmList<Item> = RealmList()
             val feature: RealmList<Feature> = RealmList()
             val player: Player = Player(i, getStringRes(this, "chara_name_", i), 5, 500, 50, 100, cardList, itemList, feature)
             realm.executeTransaction {
-                realm.copyToRealm(player)
+                realm.copyToRealmOrUpdate(player)
             }
         }
     }

@@ -14,6 +14,12 @@ import io.realm.annotations.PrimaryKey
  */
 @PoKo open class Card(
         @PrimaryKey var id: Int,
+        var playerId: Int,
         var index: Int,
         var count: Int
-) : RealmObject()
+) : RealmObject() {
+
+    override fun toString(): String {
+        return "Card(id=$id, playerId=$playerId, index=$index, count=$count)"
+    }
+}

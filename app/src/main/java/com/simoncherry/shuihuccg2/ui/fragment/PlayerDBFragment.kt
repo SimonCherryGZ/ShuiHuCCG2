@@ -1,8 +1,10 @@
 package com.simoncherry.shuihuccg2.ui.fragment
 
 import android.os.Bundle
+import android.support.v7.widget.StaggeredGridLayoutManager
 import com.simoncherry.shuihuccg2.R
 import com.simoncherry.shuihuccg2.model.Player
+import com.simoncherry.shuihuccg2.ui.adapter.CardDebugAdapter
 import com.simoncherry.shuihuccg2.util.getDrawableResId
 import com.simoncherry.shuihuccg2.util.setSampledBitmap
 import io.realm.Realm
@@ -22,6 +24,7 @@ class PlayerDBFragment : BaseFragment() {
 
     private var mPlayerIndex = 0
 
+    private lateinit var debugAdapter: CardDebugAdapter
     private lateinit var realm: Realm
     private lateinit var realmResults: RealmResults<Player>
 
@@ -48,6 +51,7 @@ class PlayerDBFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        rvCard?.adapter = null
         realmResults.removeAllChangeListeners()
         realm.close()
     }
@@ -59,6 +63,14 @@ class PlayerDBFragment : BaseFragment() {
     
     private fun init() {
         initRealm()
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        debugAdapter = CardDebugAdapter(mContext,
+                realm.where(Player::class.java).equalTo("id", mPlayerIndex).findFirst().cardList)
+        rvCard.layoutManager = StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+        rvCard.adapter = debugAdapter
     }
     
     private fun initRealm() {
