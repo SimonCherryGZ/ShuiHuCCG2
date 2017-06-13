@@ -1,15 +1,19 @@
 package com.simoncherry.shuihuccg2.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import com.simoncherry.shuihuccg2.R
+import com.simoncherry.shuihuccg2.model.Card
 import com.simoncherry.shuihuccg2.util.getDrawableResId
 import com.simoncherry.shuihuccg2.util.getStringRes
 import com.simoncherry.shuihuccg2.util.setSampledBitmap
+import io.realm.Realm
+import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_lucky_draw.*
 import java.util.*
 
@@ -24,11 +28,18 @@ import java.util.*
  * </pre>
  */
 class LuckyDrawFragment : BaseFragment() {
+    private val TAG = LuckyDrawFragment::class.java.simpleName
+
+    private lateinit var realm: Realm
+    private lateinit var realmResults: RealmResults<Card>
 
     private lateinit var mBagScaleAnim: Animation
     private lateinit var mDrawCardAnim: Animation
     private lateinit var mResetAnim: Animation
     private lateinit var mNewLogoAnim: Animation
+
+    private var mIsNewCard = false
+
 
     companion object {
         fun newInstance(): LuckyDrawFragment {
@@ -43,6 +54,12 @@ class LuckyDrawFragment : BaseFragment() {
         return R.layout.fragment_lucky_draw
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        //realmResults.removeAllChangeListeners()
+        realm.close()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
@@ -50,6 +67,7 @@ class LuckyDrawFragment : BaseFragment() {
 
     private fun init() {
         initView()
+        initRealm()
         initAnimation()
     }
 
@@ -64,6 +82,11 @@ class LuckyDrawFragment : BaseFragment() {
             layoutCardDetail.visibility = View.INVISIBLE
             ivBag.startAnimation(mBagScaleAnim)
         }
+    }
+
+    private fun initRealm() {
+        realm = Realm.getDefaultInstance()
+        realmResults = realm.where(Card::class.java).equalTo("playerId", 0).findAllAsync()
     }
 
     private fun initAnimation() {
@@ -87,15 +110,15 @@ class LuckyDrawFragment : BaseFragment() {
         mDrawCardAnim.setAnimationListener(object : AnimationListener {
             override fun onAnimationEnd(animation: Animation) {
                 layoutCardDetail.visibility = View.VISIBLE
-//                if (isExistCard === false) {
-//                    isExistCard = true
-//                    ivNewLogo.visibility = View.VISIBLE
-//                    ivNewLogo.startAnimation(mNewLogoAnim)
-//                } else {
-//                    ivNewLogo.visibility = View.INVISIBLE
-//                }
-                ivNewLogo.visibility = View.VISIBLE
-                ivNewLogo.startAnimation(mNewLogoAnim)
+                if (mIsNewCard) {
+                    Log.e(TAG, "do new card animation")
+                    mIsNewCard = false
+                    ivNewLogo.visibility = View.VISIBLE
+                    ivNewLogo.startAnimation(mNewLogoAnim)
+                } else {
+                    Log.e(TAG, "old card, no animation")
+                    ivNewLogo.visibility = View.INVISIBLE
+                }
             }
             override fun onAnimationRepeat(animation: Animation) {}
             override fun onAnimationStart(animation: Animation) {}
@@ -114,6 +137,16 @@ class LuckyDrawFragment : BaseFragment() {
     private fun LoadNewCard() {
         val random = Random(System.currentTimeMillis())
         val index = random.nextInt(108) + 1
+
+        val card =  realmResults.where().equalTo("index", index).findFirst()
+        Log.e(TAG, "draw card: " + card.toString())
+        val count = card.count
+        mIsNewCard = count == 0
+        Log.e(TAG, "is new ? " + mIsNewCard)
+
+        realm.executeTransaction {
+            card.count = count+1
+        }
 
         val cardIndex = getString(R.string.hero_index) + index.toString()
         tvCardIndex.text = cardIndex
