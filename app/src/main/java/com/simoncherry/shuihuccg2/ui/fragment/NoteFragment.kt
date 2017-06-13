@@ -26,4 +26,7 @@ class NoteFragment : BaseFragment() {
     override fun getLayout(): Int {
         return R.layout.fragment_note
     }
+
+    override fun init() {
+    }
 }

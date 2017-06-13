@@ -57,12 +57,7 @@ class CollectionFragment : BaseFragment() {
         realm.close()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        init()
-    }
-
-    private fun init() {
+    override fun init() {
         initView()
         initRecyclerView()
         initRealm()

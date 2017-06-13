@@ -2,6 +2,7 @@ package com.simoncherry.shuihuccg2.ui.fragment
 
 import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.util.Log
 import com.simoncherry.shuihuccg2.R
 import com.simoncherry.shuihuccg2.model.Player
 import com.simoncherry.shuihuccg2.ui.adapter.CardDebugAdapter
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_player_db.*
  * </pre>
  */
 class PlayerDBFragment : BaseFragment() {
+    private val TAG = PlayerDBFragment::class.java.simpleName
 
     private var mPlayerIndex = 0
 
@@ -62,7 +64,7 @@ class PlayerDBFragment : BaseFragment() {
         init()
     }
     
-    private fun init() {
+    override fun init() {
         initRealm()
         initRecyclerView()
     }
@@ -71,7 +73,7 @@ class PlayerDBFragment : BaseFragment() {
         debugAdapter = CardDebugAdapter(mContext,
                 realm.where(Player::class.java).equalTo("id", mPlayerIndex).findFirst().cardList)
         rvCard.layoutManager = StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
-        rvCard.addItemDecoration(GridSpacingItemDecoration(4, 30, true))
+        //rvCard.addItemDecoration(GridSpacingItemDecoration(4, 30, false))
         rvCard.adapter = debugAdapter
     }
     
@@ -86,10 +88,12 @@ class PlayerDBFragment : BaseFragment() {
     }
 
     private fun handleRealmResult(element: RealmResults<Player>) {
+        Log.e(TAG, "player id: " + mPlayerIndex)
         val player = element.first()
-        ivAvatar.setSampledBitmap(getDrawableResId(mContext, "chara_", mPlayerIndex), 100, 120)
-        tvId.text = player.id.toString()
-        tvName.text = player.name
-        tvStatus.text = player.getStatus()
+        // 注意，原来下面几个控件没有加"?"。  在测试页面把玩家卡片清空后，上面的监听调用到这里，下面控件全部null了
+        ivAvatar?.setSampledBitmap(getDrawableResId(mContext, "chara_", mPlayerIndex), 100, 120)
+        tvId?.text = player.id.toString()
+        tvName?.text = player.name
+        tvStatus?.text = player.getStatus()
     }
 }

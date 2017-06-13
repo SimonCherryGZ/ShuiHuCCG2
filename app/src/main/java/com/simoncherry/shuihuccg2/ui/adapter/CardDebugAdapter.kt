@@ -43,12 +43,13 @@ class CardDebugAdapter(
         } else {
             holder.layoutRoot.setBackgroundColor(0)
         }
-        holder.tvIndex.text = card.index.toString()
-        holder.tvCount.text = card.count.toString()
+        val index = "No." + card.index.toString()
+        holder.tvIndex.text = index
+        holder.tvCount.text = count.toString()
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val layoutRoot = view.layoutRoot!!
+        val layoutRoot = view.viewBg!!
         val tvIndex = view.tvIndex!!
         val tvCount = view.tvCount!!
     }

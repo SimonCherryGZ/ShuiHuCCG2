@@ -26,4 +26,7 @@ class MapFragment : BaseFragment() {
     override fun getLayout(): Int {
         return R.layout.fragment_map
     }
+
+    override fun init() {
+    }
 }

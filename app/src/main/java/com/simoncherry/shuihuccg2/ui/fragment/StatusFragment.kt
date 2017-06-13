@@ -26,4 +26,7 @@ class StatusFragment : BaseFragment() {
     override fun getLayout(): Int {
         return R.layout.fragment_status
     }
+
+    override fun init() {
+    }
 }

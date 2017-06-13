@@ -55,7 +55,7 @@ class TestFragment : BaseFragment() {
         init()
     }
 
-    private fun init() {
+    override fun init() {
         initViewPager()
         initIndicator()
         initRealm()

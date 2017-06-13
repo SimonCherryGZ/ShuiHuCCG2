@@ -28,6 +28,13 @@ abstract class BaseFragment : SupportFragment() {
 
     protected abstract fun getLayout(): Int
 
+    protected abstract fun init()
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        init()
+    }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         mActivity = context as Activity
