@@ -7,11 +7,14 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import com.simoncherry.shuihuccg2.R
+import com.simoncherry.shuihuccg2.model.Card
 import com.simoncherry.shuihuccg2.model.CollectionBean
 import com.simoncherry.shuihuccg2.ui.adapter.CollectionAdapter
 import com.simoncherry.shuihuccg2.util.Rotate3d
 import com.simoncherry.shuihuccg2.util.getDrawableResId
 import com.simoncherry.shuihuccg2.util.setSampledBitmap
+import io.realm.Realm
+import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_collection.*
 import java.util.*
 
@@ -27,6 +30,8 @@ import java.util.*
  */
 class CollectionFragment : BaseFragment() {
 
+    private lateinit var realm: Realm
+    private lateinit var realmResults: RealmResults<Card>
     private lateinit var mAdapter: CollectionAdapter
     private lateinit var mData: MutableList<CollectionBean>
     private var mCurrentPage = 1
@@ -46,6 +51,12 @@ class CollectionFragment : BaseFragment() {
         return R.layout.fragment_collection
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        realmResults.removeAllChangeListeners()
+        realm.close()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         init()
@@ -54,6 +65,7 @@ class CollectionFragment : BaseFragment() {
     private fun init() {
         initView()
         initRecyclerView()
+        initRealm()
     }
 
     private fun initView() {
@@ -99,25 +111,36 @@ class CollectionFragment : BaseFragment() {
         }
     }
 
+    private fun initRealm() {
+        realm = Realm.getDefaultInstance()
+        realmResults = realm.where(Card::class.java).equalTo("playerId", 0).findAllAsync()
+        realmResults.addChangeListener { _ ->
+            showCardByPage(mCurrentPage)
+        }
+    }
+
     private fun initRecyclerView() {
         mData = ArrayList<CollectionBean>()
         mAdapter = CollectionAdapter(mContext, mData)
         mAdapter.setOnItemClickListener(object : CollectionAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 if (mData.size > position) {
-                    mCurrentIndex = (mCurrentPage - 1) * 6 + position + 1
-                    ivDetail.setSampledBitmap(mData[position].resId, 200, 300)
-                    ivDetail.visibility = View.VISIBLE
-                    ivMask.visibility = View.VISIBLE
-                    ivMask.isClickable = true
-                    layoutDetail.visibility = View.VISIBLE
+                    val count = mData[position].count
+                    if (count > 0) {
+                        mCurrentIndex = (mCurrentPage - 1) * 6 + position + 1
+                        ivDetail.setSampledBitmap(mData[position].resId, 200, 300)
+                        ivDetail.visibility = View.VISIBLE
+                        ivMask.visibility = View.VISIBLE
+                        ivMask.isClickable = true
+                        layoutDetail.visibility = View.VISIBLE
+                    }
                 }
             }
         })
         rvCollection.layoutManager = StaggeredGridLayoutManager(2, VERTICAL)
         rvCollection.adapter = mAdapter
 
-        showCardByPage(mCurrentPage)
+        //showCardByPage(mCurrentPage)
     }
 
     private fun setPagePointer(page: Int) {
@@ -129,7 +152,7 @@ class CollectionFragment : BaseFragment() {
         mData.clear()
         for (i in 1..6) {
             val number = (page - 1) * 6 + i
-            val count = 99
+            val count = realmResults[number-1].count
 
             val name: String
             if (count > 0) {

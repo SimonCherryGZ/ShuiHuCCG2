@@ -5,6 +5,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import com.simoncherry.shuihuccg2.R
 import com.simoncherry.shuihuccg2.model.Player
 import com.simoncherry.shuihuccg2.ui.adapter.CardDebugAdapter
+import com.simoncherry.shuihuccg2.util.GridSpacingItemDecoration
 import com.simoncherry.shuihuccg2.util.getDrawableResId
 import com.simoncherry.shuihuccg2.util.setSampledBitmap
 import io.realm.Realm
@@ -70,6 +71,7 @@ class PlayerDBFragment : BaseFragment() {
         debugAdapter = CardDebugAdapter(mContext,
                 realm.where(Player::class.java).equalTo("id", mPlayerIndex).findFirst().cardList)
         rvCard.layoutManager = StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL)
+        rvCard.addItemDecoration(GridSpacingItemDecoration(4, 30, true))
         rvCard.adapter = debugAdapter
     }
     

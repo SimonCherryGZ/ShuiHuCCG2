@@ -75,7 +75,7 @@ class MyApplication : Application() {
                 } else {
                     nextId = currentIdNum.toInt() + j
                 }
-                val card = Card(nextId, i, j, random.nextInt(10))
+                val card = Card(nextId, i, j, random.nextInt(2))
                 Log.e(TAG, card.toString())
                 cardList.add(card)
             }
